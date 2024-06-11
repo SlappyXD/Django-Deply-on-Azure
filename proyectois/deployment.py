@@ -22,7 +22,7 @@ MIDDLEWARE = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStogare'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-connection_string = os.environ['AZURE_MYSQL_CONNECTIONSTRING']
+connection_string = os.environ['MYSQL_CONNECTIONSTRING']
 parameters = {pair.split('='):pair.split('=')[1] for pair in connection_string.split(' ')}
 
 DATABASES = {
