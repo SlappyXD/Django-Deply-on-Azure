@@ -81,6 +81,6 @@ jobs:
       
       - name: Configure App Service timeout
         run: |
-          az webapp config appsettings set --resource-group app-service-labolsita --name LaBolsitaWeb --settings WEBSITES_CONTAINER_START_TIME_LIMIT=120
+          az webapp config appsettings set --resource-group app-service-labolsita --name LaBolsitaWeb --settings WEBSITES_CONTAINER_START_TIME_LIMIT=1000
         env:
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}    
