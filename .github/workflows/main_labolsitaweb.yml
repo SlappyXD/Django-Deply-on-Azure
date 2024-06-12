@@ -84,3 +84,26 @@ jobs:
           az webapp config appsettings set --resource-group app-service-labolsita --name LaBolsitaWeb --settings WEBSITES_CONTAINER_START_TIME_LIMIT=1000
         env:
           AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}    
+      
+      - name: SSH into Azure Web App and set up environment
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_WEBAPP_SSH_USER }}@${{ secrets.AZURE_WEBAPP_HOST }} << 'EOF'
+          if [ ! -d "/home/site/wwwroot/venv" ]; then
+            python3 -m venv /home/site/wwwroot/venv
+          fi
+          source /home/site/wwwroot/venv/bin/activate
+          pip install -r /home/site/wwwroot/requirements.txt
+          EOF
+        env:
+          AZURE_WEBAPP_SSH_USER: ${{ secrets.AZURE_WEBAPP_SSH_USER }}
+          AZURE_WEBAPP_HOST: ${{ secrets.AZURE_WEBAPP_HOST }}
+
+      - name: SSH into Azure Web App and run migrations
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_WEBAPP_SSH_USER }}@${{ secrets.AZURE_WEBAPP_HOST }} << 'EOF'
+          source /home/site/wwwroot/venv/bin/activate
+          python /home/site/wwwroot/manage.py migrate
+          EOF
+        env:
+          AZURE_WEBAPP_SSH_USER: ${{ secrets.AZURE_WEBAPP_SSH_USER }}
+          AZURE_WEBAPP_HOST: ${{ secrets.AZURE_WEBAPP_HOST }}
